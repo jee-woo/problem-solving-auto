@@ -15,14 +15,12 @@ function solution(N, stages) {
     
     let sortedRates = failureRates.slice().sort((a, b) => b - a);
     let maxIdx;
-    console.log(failureRates)
-    // console.log(sortedRates)
+    
     for (let i = 0; i < sortedRates.length; i++) {
         maxIdx = failureRates.indexOf(sortedRates[i]);
         result.push(failureRates.indexOf(sortedRates[i]) + 1);
         failureRates[maxIdx] = -1;
     }
-    // console.log(result)
-    console.log(failureRates)
+    
     return result;
 }
