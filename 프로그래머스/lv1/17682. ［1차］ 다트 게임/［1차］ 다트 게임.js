@@ -22,10 +22,9 @@ function solution(dartResult) {
     // case문으로 점수, 보너스, 옵션 나누기
     // 점수 두자리수일 경우 처리
     let score = [];
-    let power, option;
+    // let power, option;
     for (let i = 0; i < dartResult.length; i++) {
-        
-        power = "", option = "";
+        // power = "", option = "";
         switch(true) {
             case /[0-9]/.test(dartResult[i]):
                 if (+dartResult[i+1] === 0) {
