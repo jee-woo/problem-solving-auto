@@ -3,6 +3,7 @@ function solution(survey, choices) {
     let characters2 = ["TR", "FC", "MJ", "NA"];
     
     let scores = [0, 0, 0, 0];
+    
     for (let i = 0; i < survey.length; i++) {
         if (choices[i] === 4) continue;
         switch(survey[i]) {
