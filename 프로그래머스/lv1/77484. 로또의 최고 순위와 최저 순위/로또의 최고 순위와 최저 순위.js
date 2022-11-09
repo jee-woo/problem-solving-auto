@@ -6,6 +6,8 @@ function solution(lottos, win_nums) {
             wins++;
         }
     }
+    let bestRank = wins === 0 && zeros === 0 ? 6 : 7 - wins - zeros;
+    let worstRank = wins === 0 ? win_nums.length : 7 - wins;
     
-    return [wins === 0 && zeros === 0 ? 6 : 7 - wins - zeros, wins === 0 ? win_nums.length : 7 - wins]
+    return [bestRank, worstRank]
 }
