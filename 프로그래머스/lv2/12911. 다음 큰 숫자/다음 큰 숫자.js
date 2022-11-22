@@ -9,6 +9,4 @@ function solution(n) {
             return n;
         }
     }
-    
-    return;
 }
