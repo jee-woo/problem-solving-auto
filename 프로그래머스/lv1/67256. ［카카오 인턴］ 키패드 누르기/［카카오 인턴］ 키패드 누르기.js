@@ -1,75 +1,55 @@
-function getDistance(pos, number) {
-    let distance = 0, x, y;
-
-    if (number===0) {
-        number = 11;
+function solution(numbers, hand) {
+    let result = "";
+    const numLength = numbers.length;
+    let leftLoc = 10, rightLoc = 12;
+    let num;
+    
+    for (let i = 0; i < numLength; i++) {
+        if (numbers[i] === 0) num = 11;
+        else num = numbers[i];
+        
+        result += getHand(num, leftLoc, rightLoc, hand);
+        
+        if (result[i] === "L") leftLoc = num;
+        else rightLoc = num;
     }
-    if (pos === 0) {
-        pos = 11;
-    }
-    // x와 y 초기화
-    if (number % 3 === 0) {
-        x = Math.floor(number / 3);
-        y = 3;
-    }
-    else {
-        x = Math.floor(number / 3) + 1;
-        y = number % 3;
-    }
-    // distance 구하기
-    if (pos % 3 === 0) {
-        distance += Math.abs(x - (Math.floor(pos / 3)));
-        distance += Math.abs(y - 3);
-    }
-    else {
-        distance += Math.abs(x - (Math.floor(pos / 3) + 1));
-        distance += Math.abs(y - (pos % 3));
-    }
-
-    return distance;
+    
+    return result;
 }
 
-function solution(numbers, hand) {
-    let answer = "";
+function getHand(num, leftLoc, rightLoc, hand) {
+    let nowHand;
+    
+    if (num === 1 || num === 4 || num === 7) {
+        nowHand = "L";
+    } else if (num === 3 || num === 6 || num === 9) {
+        nowHand = "R";
+    } else {
+        const leftDistance = getDistance(num, leftLoc);
+        const rightDistance = getDistance(num, rightLoc);
 
-    let left_distance, right_distance;
-    let left_pos = 10, right_pos = 12;
-
-    for (let i=0; i<numbers.length; i++) {
-        switch(numbers[i]) {
-            case 1: case 4: case 7:
-                answer += "L";
-                left_pos = numbers[i];
-                break;
-            case 3: case 6: case 9:
-                answer += "R";
-                right_pos = numbers[i];
-                break;
-            case 2: case 5: case 8: case 0:
-                left_distance = getDistance(left_pos, numbers[i]);
-                right_distance = getDistance(right_pos, numbers[i]);
-
-                if (left_distance === right_distance) {
-                    if (hand ==="left") {
-                        answer += "L";
-                        left_pos = numbers[i];
-                    }
-                    else {
-                        answer += "R";
-                        right_pos = numbers[i];
-                    }
-                }
-                else if (left_distance < right_distance) {
-                    answer += "L";
-                    left_pos = numbers[i];
-                }
-                else {
-                    answer += "R";
-                    right_pos = numbers[i];
-                }
-                break;
+        if (leftDistance === rightDistance) {
+            nowHand = hand[0].toUpperCase();
+        } else if (leftDistance < rightDistance) {
+            nowHand = "L";
+        } else {
+            nowHand = "R";
         }
     }
+    
+    return nowHand;
+}
 
-    return answer;
+// *은 10, 0은 11, #은 12로 계산
+function getDistance(num1, num2) {
+    const coord = [null, // 인덱스 0은 비우기
+                   [0, 0], [1, 0], [2, 0],
+                   [0, 1], [1, 1], [2, 1],
+                   [0, 2], [1, 2], [2, 2],
+                   [0, 3], [1, 3], [2, 3]];
+    const X = 0, Y = 1;
+    const distance = Math.abs(coord[num1][X] - coord[num2][X])
+                    + Math.abs(coord[num1][Y] - coord[num2][Y]);
+    
+    return distance;
 }
