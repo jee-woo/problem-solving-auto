@@ -9,7 +9,9 @@ function solution(n, words) {
         nowSize = already.size;
         
         // 탈락
-        if ((i > 0 && words[i-1].slice(-1)[0] !== words[i][0]) || words[i].length <= 1 || prevSize === nowSize) {
+        if ((i > 0 && words[i - 1].slice(-1)[0] !== words[i][0])
+            || words[i].length <= 1
+            || prevSize === nowSize) {
             num = i % n + 1;
             turn = parseInt(i / n) + 1;
             return [num, turn];
