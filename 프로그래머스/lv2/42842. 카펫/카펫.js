@@ -1,8 +1,9 @@
 function solution(brown, yellow) {
-    let rowCol = brown / 2 - 2;
+    let rowCol = brown / 2 - 2;     // 노랑의 row + col
     let row = rowCol - 1, col = 1;
     
     while (true) {
+        // 카펫의 row, col은 노랑의 row + 2, col + 2와 같다.
         if (row * col === yellow) return [row + 2, col + 2];
         row--, col++;
     }
