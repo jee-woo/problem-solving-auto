@@ -10,9 +10,11 @@ function solution(board, moves) {
 }
 
 const play = (move, board, basket) => {
+    console.log(move)
     let score = 0;
     let board_size = board.length;
     for (let j = 0; j < board_size; j++) {
+        console.log(move)
         if (board[j][move] !== 0) {
             score += remove(board[j], move, basket);
             break;
@@ -40,22 +42,24 @@ const play = (move, board, basket) => {
 }
 
 const remove = (board, move, basket) => {
+    console.log(move)
     let score = 0;
     if (basket.length === 0) {
         basket.push(board);
-        board[move] = 0;
+        // board[move] = 0;
         // break;
     }
     else if (basket.slice(-1)[0] === board[move]) {
         basket.pop();
-        board[move] = 0;
+        // board[move] = 0;
         score += 2;
         // break;
     }
     else {
         basket.push(board[move]);
-        board[move] = 0;
+        // board[move] = 0;
         // break;
     }
+    board[move] = 0;
     return score;
 }
