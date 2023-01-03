@@ -6,7 +6,6 @@ function solution(new_id) {
     
     // step 2
     real_id = real_id.replace(/[^0-9^a-z^\-\_\.\^]/g, "").replace(/\^/g, "");
-    // real_id = real_id.replace(/[^-_.]]/g, "");
     
     // step 3
     for (let i = real_id.length; i > 1; i--) {
