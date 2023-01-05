@@ -1,17 +1,17 @@
 function solution(number, limit, power) {
-    const weights = [];
+    let weights = 0;
     let divisor;
     
     for (let i = 1; i <= number; i++) {
         divisor = getDivisor(i);
         if (divisor > limit) {
-            weights.push(power);
+            weights += power;
         } else {
-            weights.push(divisor);
+            weights += divisor;
         }
     }
     
-    return weights.reduce((acc, cur) => acc + cur);
+    return weights;
 }
 
 const getDivisor = (num) => {
