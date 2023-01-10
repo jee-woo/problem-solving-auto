@@ -37,26 +37,3 @@ const isProper = (str) => {
     return true;
 }
 
-// const isProper = (str) => {
-//     let small = 0, medium = 0, big = 0;
-    
-//     for (let i = 0; i < str.length; i++) {
-//         if (str[i] === "(") small++;
-//         else if (str[i] === ")") {
-//             small--;
-//         }
-//         else if (str[i] === "{") medium++;
-//         else if (str[i] === "}") {
-//             medium--;
-//         }
-//         else if (str[i] === "[") big++;
-//         else if (str[i] === "]") {
-//             big--;
-//         }
-        
-//         if (small < 0 || medium < 0 || big < 0) return false;
-//     }
-    
-//     if (small !== 0 || medium !== 0 || big !== 0) return false;
-//     else return true;
-// }
