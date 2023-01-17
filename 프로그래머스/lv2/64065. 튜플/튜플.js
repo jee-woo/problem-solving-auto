@@ -11,9 +11,9 @@ function solution(s) {
     for (let i = 0; i < sArr.length; i++) {
         sArr[i] = sArr[i].split(",");
         for (let j = 0; j < sArr[i].length; j++) {
-            if (!sSet.has(+sArr[i][j])) {
+            if (!sSet.has(sArr[i][j])) {
                 tuple.push(+sArr[i][j]);
-                sSet.add(+sArr[i][j]);
+                sSet.add(sArr[i][j]);
                 break;
             }
         }
