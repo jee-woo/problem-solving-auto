@@ -8,13 +8,13 @@ function solution(elements) {
     const set = new Set();
     
     for (let size = 1; size <= elements.length; size++) {
-        getSumOfSequence(size, set, elements);
+        addSumOfSequence(size, set, elements);
     }
     
     return set.size;
 }
 
-const getSumOfSequence = (size, set, elements) => {
+const addSumOfSequence = (size, set, elements) => {
     let sum = elements.slice(0, size).reduce((acc, cur) => acc + cur);
     set.add(sum);
     
