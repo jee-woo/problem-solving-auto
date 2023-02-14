@@ -16,7 +16,7 @@ function solution(msg) {
             idx = dictionary.get(msg.slice(i, j));
             if (idx) {
                 answer.push(idx);
-                dictionary.set(msg.slice(i, j + 1), newWordIdx++)
+                dictionary.set(msg.slice(i, j + 1), newWordIdx++);
                 found = true;
                 i = j - 1;
                 break;
