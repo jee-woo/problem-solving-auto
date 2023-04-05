@@ -24,22 +24,11 @@ const solution = (n, adjMatrix) => {
     }
   };
 
-  const hasWay = (start, end) => {
-    visited = new Array(n).fill(false);
-    let result = dfs(start, end);
-    if (result === true) {
-      return true;
-    }
-    return false;
-  };
-
   const makeWayMatrix = (n) => {
     for (let i = 0; i < n; i++) {
       visited = Array(n).fill(false);
       dfs(i, i);
     }
-
-    return wayMatrix;
   };
 
   const matrix2String = (matrix) => {
