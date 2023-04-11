@@ -1,9 +1,12 @@
-
-const input = require("fs")
-  .readFileSync("/dev/stdin")
+const fs = require("fs");
+const input = fs
+  .readFileSync(
+    process.platform === "linux" ? "/dev/stdin" : __dirname + "/1260.txt"
+  )
   .toString()
   .trim()
   .split("\n");
+
 
 const [N, M, V] = input[0].split(" ").map(Number);
 const edges = input.slice(1).map((edge) => edge.split(" ").map(Number));
