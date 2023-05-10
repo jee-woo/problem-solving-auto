@@ -13,8 +13,7 @@ const map = input.slice(1).map((line) => line.split(" ").map(Number));
 const solution = (map, n, m) => {
   let minFuel = 600;
 
-  const explore = (x, y, fuel, direction, test) => {
-    test += "\n" + x + " " + y;
+  const explore = (x, y, fuel, direction) => {
     if (x === n) {
       minFuel = Math.min(minFuel, fuel);
       return;
@@ -22,7 +21,7 @@ const solution = (map, n, m) => {
     fuel += map[x][y];
     for (let i = -1; i <= 1; i++) {
       if (x + 1 <= n && y + i >= 0 && y + i < m && direction !== i)
-        explore(x + 1, y + i, fuel, i, test);
+        explore(x + 1, y + i, fuel, i);
     }
   };
 
