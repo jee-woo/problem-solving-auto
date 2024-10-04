@@ -40,9 +40,11 @@ function bfs([asIs, toBe]) {
   const queue = [[asIs, ""]];
   const visited = new Array(10000).fill(null).map(() => false);
   visited[asIs] = true;
-
-  while (queue.length > 0) {
-    const [nowNum, nowOp] = queue.shift();
+  let startIdx = 0;
+  // while (queue.length > 0) {
+  while (startIdx < queue.length) {
+    // const [nowNum, nowOp] = queue.shift();
+    const [nowNum, nowOp] = queue[startIdx++];
 
     if (nowNum === toBe) {
       return nowOp;
