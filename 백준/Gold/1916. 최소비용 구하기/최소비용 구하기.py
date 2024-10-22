@@ -1,28 +1,7 @@
 import heapq
 import sys
-import os
 
 input = sys.stdin.readline
-
-# # 현재 파일의 경로를 기준으로 input.txt 파일 경로 설정
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# file_path = os.path.join(current_dir, 'input.txt')
-
-# # input.txt 파일에서 데이터를 읽어와서 리스트로 저장
-# with open(file_path, 'r') as file:
-#   lines = file.readlines()
-
-# # 라인별로 입력을 처리
-# index = 0
-
-
-# def input():
-#   global index
-#   value = lines[index].strip()  # 줄바꿈 제거
-#   index += 1
-#   return value
-
-
 INF = int(1e9)  # 무한을 의미하는 값으로 10억을 설정
 
 # 노드의 개수, 간선의 개수를 입력받기
@@ -57,12 +36,12 @@ def dijkstra(start):
     if distance[now] < dist:
       continue
     # 현재 노드와 연결된 다른 인접한 노드들을 확인
-    for i in graph[now]:
-      cost = dist + i[1]
+    for nowNode, nowCost in graph[now]:
+      cost = dist + nowCost
       # 현재 노드를 거쳐서, 다른 노드로 이동하는 거리가 더 짧은 경우
-      if cost < distance[i[0]]:
-        distance[i[0]] = cost
-        heapq.heappush(q, (cost, i[0]))
+      if cost < distance[nowNode]:
+        distance[nowNode] = cost
+        heapq.heappush(q, (cost, nowNode))
 
 
 # 다익스트라 알고리즘을 수행
