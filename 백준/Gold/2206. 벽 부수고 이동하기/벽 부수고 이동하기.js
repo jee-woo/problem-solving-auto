@@ -1,49 +1,63 @@
-let fs = require("fs");
-let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
+// 2024.12.02
 
-let [N, M] = input[0].split(" ").map(Number);
-input = input.slice(1).map((v) => v.split("").map(Number));
-const ch = Array.from(new Array(N), () => new Array());
-const dx = [1, 0, -1, 0];
-const dy = [0, 1, 0, -1];
-const queue = [];
+const fs = require('fs');
+const path = require('path');
+const filePath = path.join(__dirname, 'input.txt');
+// const input = fs.readFileSync(filePath, 'utf-8').trim().split('\n');
+const input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-for (let i = 0; i < N; i++) {
-  for (let j = 0; j < M; j++) {
-    ch[i][j] = new Array(2).fill(0);
-  }
-}
+const [N, M] = input[0].split(' ').map(Number);
+const map = input.slice(1).map((v) => v.split('').map(Number));
 
-queue.push([0, 0, 0]);
-ch[0][0][0] = 1;
+const bfs = () => {
+  const queue = [[0, 0, 1, false]];
+  const visited = Array.from({ length: N }, () => Array(M).fill(false));
+  const brkVisited = Array.from({ length: N }, () => Array(M).fill(false));
 
-function BFS() {
+  visited[0][0] = true;
+
   let idx = 0;
+  while (idx < queue.length) {
+    // while (queue.length) {
+    // const [r, c, len, brk] = queue.shift();
+    const [r, c, len, brk] = queue[idx++];
 
-  while (idx !== queue.length) {
-    const [y, x, isBreak] = queue[idx];
-
-    if (x === M - 1 && y === N - 1) {
-      return ch[y][x][isBreak];
+    if (r === N - 1 && c === M - 1) {
+      console.log(len);
+      return;
     }
 
-    for (let i = 0; i < dx.length; i++) {
-      const [nx, ny] = [x + dx[i], y + dy[i]];
+    const dxdy = [
+      [r, c + 1],
+      [r, c - 1],
+      [r + 1, c],
+      [r - 1, c],
+    ];
 
-      if (nx >= 0 && nx < M && ny >= 0 && ny < N) {
-        if (input[ny][nx] === 0 && ch[ny][nx][isBreak] === 0) {
-          ch[ny][nx][isBreak] = ch[y][x][isBreak] + 1;
-          queue.push([ny, nx, isBreak]);
-        } else if (input[ny][nx] === 1 && isBreak === 0) {
-          ch[ny][nx][isBreak + 1] = ch[y][x][isBreak] + 1;
-          queue.push([ny, nx, isBreak + 1]);
+    for (let [nr, nc] of dxdy) {
+      if (nr < 0 || nc < 0 || nr >= N || nc >= M) continue;
+
+      if (
+        map[nr][nc] === 0 &&
+        ((!brk && !visited[nr][nc]) || (brk && !brkVisited[nr][nc]))
+      ) {
+        // queue.push([nr, nc, len + 1, brk || false, `${way} -> ${nr} ${nc}`]);
+        queue.push([nr, nc, len + 1, brk || false]);
+        if (brk) {
+          brkVisited[nr][nc] = true;
+        } else {
+          visited[nr][nc] = true;
         }
+      } else if (map[nr][nc] === 1 && !brk && !visited[nr][nc]) {
+        // queue.push([nr, nc, len + 1, true, `${way} -> ${nr} ${nc}`]);
+        queue.push([nr, nc, len + 1, true]);
+        brkVisited[nr][nc] = true;
+        // map[nr][nc] = 0;
       }
     }
-    idx++;
   }
 
-  return -1;
-}
+  console.log(-1);
+};
 
-console.log(BFS());
+bfs();
