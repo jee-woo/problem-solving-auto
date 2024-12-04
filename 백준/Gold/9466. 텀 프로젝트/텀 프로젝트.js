@@ -13,31 +13,28 @@ const solution = (nums) => {
   const visited = new Array(nums.length + 1).fill(-1);
   const selected = new Array(nums.length + 1).fill(false);
 
-  const dfs = (start, num, len, way) => {
+  const dfs = (start, num, len) => {
     if (num === start) {
       sum += len;
       return;
     }
     if (visited[num] > 0) {
       if (selected[num]) {
-        // console.table(visited);
         sum += len - visited[num];
-        // console.log('way', way);
-        // console.log('num, len, sum', num, len, sum);
       }
       return;
     }
 
     visited[num] = len;
     selected[num] = true;
-    dfs(start, nums[num - 1], len + 1, `${way} ${nums[num - 1]}`);
+    dfs(start, nums[num - 1], len + 1);
     selected[num] = false;
   };
 
   for (let i = 1; i <= nums.length; i++) {
     if (visited[i] > 0) continue;
     visited[i] = 1;
-    dfs(i, nums[i - 1], 1, `${i} ${nums[i - 1]}`);
+    dfs(i, nums[i - 1], 1);
   }
 
   console.log(nums.length - sum);
