@@ -17,11 +17,11 @@ const bfs = () => {
 
   const queue = [[0, 0, 0, 0]];
 
-  let idx = 0;
-  // while (queue.length) {
-  while (idx < queue.length) {
-    // const [r, c, n, horse] = queue.shift();
-    const [r, c, n, horse] = queue[idx++];
+  // let idx = 0;
+  while (queue.length) {
+    // while (idx < queue.length) {
+    const [r, c, n, horse] = queue.shift();
+    // const [r, c, n, horse] = queue[idx++];
     if (r === H - 1 && c === W - 1) {
       console.log(n);
       return;
