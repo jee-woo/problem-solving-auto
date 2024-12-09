@@ -10,7 +10,8 @@ dp[1] = BigInt(1);
 dp[2] = BigInt(3);
 
 for (let i = 3; i <= N; i++) {
-  dp[i] = dp[i - 2] * BigInt(2) + dp[i - 1];
+  dp[i] =
+    ((dp[i - 2] * BigInt(2)) % BigInt(10007)) + (dp[i - 1] % BigInt(10007));
 }
 
 console.log(String(dp[N] % BigInt(10007)));
