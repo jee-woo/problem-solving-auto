@@ -14,9 +14,7 @@ let dc = [0, 1, 0, -1];
 
 const checkCleanNsew = (r, c) => {
   for (let i = 0; i < 4; i++) {
-    // console.log(room[r + dr[i]][c + dc[i]]);
-    if (room[r + dr[i]][c + dc[i]] !== -1 && room[r + dr[i]][c + dc[i]] !== 1)
-      return true;
+    if (room[r + dr[i]][c + dc[i]] === 0) return true;
   }
   return false;
 };
@@ -33,8 +31,6 @@ const clean = (r, c, d) => {
     }
     if (!checkCleanNsew(r, c)) {
       // 뒤로 후진
-      // r += dr[(d + 2) % 4];
-      // c += dc[(d + 2) % 4];
       r -= dr[d];
       c -= dc[d];
       continue;
