@@ -36,10 +36,8 @@ def segment(l, r, nl, nr, nn, tree):
   if l <= nl and nr <= r:
     # 현재 구간이 완전히 포함되면 해당 노드 반환
     return tree[nn]
-  mid = (nl + nr) // 2
-  left_val = segment(l, r, nl, mid, nn * 2, tree)
-  right_val = segment(l, r, mid + 1, nr, nn * 2 + 1, tree)
-  return (left_val * right_val) % mod
+  mid = (nl + nr) // 2 
+  return (segment(l, r, nl, mid, nn * 2, tree) * segment(l, r, mid + 1, nr, nn * 2 + 1, tree)) % mod
 
 
 def main():
