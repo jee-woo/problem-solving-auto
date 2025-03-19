@@ -23,8 +23,6 @@ for i in range(t):
 
   visited = [[False] * (n+1) for _ in range(n+1)]
 
-  # print(visited)
-
   for i in range(m):
     a, b = map(int, input().split())
     if last_year[a] < last_year[b]:
@@ -42,22 +40,16 @@ for i in range(t):
         if last_year[i] < last_year[j]:
           graph[i].append(j)
           indegree[j] += 1
-          visited[i][j] = True
         else:
           graph[j].append(i)
           indegree[i] += 1
-          visited[j][i] = True
 
   result = []
   q = deque()
-  # print(visited)
-  # print(graph)
 
   for i in range(1, n + 1):
     if indegree[i] == 0:
       q.append(i)
-
-  # print(q)
 
   while q:
     now = q.popleft()
@@ -67,8 +59,6 @@ for i in range(t):
       if indegree[i] == 0:
         q.append(i)
 
-  # print(graph)
-
   if len(result) != n:
     print('IMPOSSIBLE')
     continue
@@ -77,4 +67,3 @@ for i in range(t):
     continue
 
   print(' '.join(result))
-
