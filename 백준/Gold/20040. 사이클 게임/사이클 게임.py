@@ -20,10 +20,7 @@ def union_parent(a, b, parent):
     parent[a] = b
 
 
-parent = [0 for _ in range(n)]
-
-for i in range(n):
-  parent[i] = i
+parent = list(range(n))
 
 found = False
 
