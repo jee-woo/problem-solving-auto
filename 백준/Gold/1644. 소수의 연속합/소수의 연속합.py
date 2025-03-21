@@ -41,21 +41,5 @@ else:
     else:
       s += 1
 
-  s = len(dp) - 3
-  e = len(dp) - 2
-
-  while s < e and s >= 0:
-    # print(s, e)
-
-    if dp[e] - dp[s] == n:
-      if not (s, e) in a_s:
-        answer += 1
-        a_s.add((s, e))
-      s -= 1
-      e -= 1
-    elif dp[e] - dp[s] < n:
-      s -= 1
-    else:
-      e -= 1
 
   print(answer)
