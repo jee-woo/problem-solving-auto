@@ -11,9 +11,20 @@ for i in range(n):
 arr.sort()
 two_set = set()
 
-for x in arr:
-  for y in arr:
-    two_set.add(x+y)
+
+def dfs(i, depth, sum):
+  if depth == 2:
+    two_set.add(sum)
+    return
+  for j in range(i, n):
+    dfs(j, depth+1, sum+arr[j])
+
+
+dfs(-1, 0, 0)
+
+# for x in arr:
+#   for y in arr:
+#     two_set.add(x+y)
 
 
 def solution():
