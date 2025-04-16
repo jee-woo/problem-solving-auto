@@ -1,39 +1,37 @@
 import sys
+input = sys.stdin.read
+data = input().split()
 
-input = sys.stdin.readline
+n, m = int(data[0]), int(data[1])
+words = data[2:]
 
-n, m = map(int, input().split())
+MAX_NODE = 5000000  # 최대 노드 수 (충분히 크게 잡기)
+children = [[0] * 26 for _ in range(MAX_NODE)]
+is_end = [False] * MAX_NODE
+node_count = 1  # root는 0번 노드
 
+# 사전 단어 insert
+for word in words[:n]:
+    node = 0
+    for char in word:
+        idx = ord(char) - ord('a')
+        if children[node][idx] == 0:
+            children[node][idx] = node_count
+            node_count += 1
+        node = children[node][idx]
+    is_end[node] = True
 
-class TrieNode:
-  def __init__(self):
-    self.children = dict()
-    self.is_end = False
-
-
-root = TrieNode()
+# 검사
 count = 0
-
-for i in range(n):
-  word = input().strip()
-  node = root
-  for _, char in enumerate(word):
-    if char not in node.children:
-      node.children[char] = TrieNode()
-    node = node.children[char]
-  node.is_end = True
-
-
-for i in range(m):
-  word = input().strip()
-  node = root
-  for j, char in enumerate(word):  # b a e k j o o n
-    if char not in node.children:
-      break
-    node = node.children[char]
-
-    if j == len(word)-1 and node.is_end:
-      count += 1
-      break
+for word in words[n:]:
+    node = 0
+    for i, char in enumerate(word):
+        idx = ord(char) - ord('a')
+        if children[node][idx] == 0:
+            break
+        node = children[node][idx]
+        if i == len(word) - 1 and is_end[node]:
+            count += 1
+            break
 
 print(count)
