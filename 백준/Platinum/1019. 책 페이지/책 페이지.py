@@ -22,8 +22,7 @@ def count(n, digit):
     else:
       answer[i] += high * digit
 
-  if digit >= 1:
-    answer[0] -= digit  # 0은 맨 앞자리에는 못 오므로 보정
+  answer[0] -= digit  # 0은 맨 앞자리에는 못 오므로 보정
 
 
 digit = 1
