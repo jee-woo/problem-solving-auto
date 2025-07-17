@@ -16,24 +16,23 @@ def solution(user_id, banned_id):
         for i, banned in enumerate(banned_id):
             if check(user, banned):
                 banned_map[i].append(user)
-    # print(banned_map)
     
     answer_set = set()
-    visited = dict()
-    for user in user_id:
-        visited[user] = False
+    visited = set()
+    # for lst in banned_map:
+    #     lst.sort()
     
     def dfs(level, arr):
         if level == len(banned_id):
-            answer_set.add('_'.join(sorted(arr)))
+            answer_set.add(frozenset(arr))
             return
         
         for user in banned_map[level]:
-            if visited[user]: continue
-            visited[user] = True
+            if user in visited: continue
+            visited.add(user)
             arr.append(user)
             dfs(level + 1, arr)
-            visited[user] = False
+            visited.remove(user)
             arr.pop()
     
     dfs(0, [])
