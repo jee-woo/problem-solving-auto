@@ -15,7 +15,6 @@ def solution(n, edge):
         else:
             nodes[b] = [a]
             
-    # print(nodes)
     visited = [0] * (n+1)
     visited[1] = 1
     
@@ -29,9 +28,8 @@ def solution(n, edge):
             visited[node] = lines + 1
             q.append((node, lines + 1))
     
-    # print(visited)
     max_lines = max(visited)
-    # print(max_lines)
+
     for i in range(1, n+1):
         if visited[i] == max_lines:
             answer += 1
@@ -41,6 +39,6 @@ def solution(n, edge):
 """
 최단경로로 이동했을 때 간선의 개수가 가장 많은 노드들
 
-다익스트라
+bfs
 
 """
