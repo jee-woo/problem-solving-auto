@@ -1,69 +1,55 @@
-from collections import deque
+import heapq
 
 def solution(board):
     n = len(board)
     
-    # visited_cost[r][c][dir]
-    # (r, c)에 dir 방향으로 도착했을 때의 최소 비용을 저장
-    # 0:오른쪽, 1:아래, 2:왼쪽, 3:위
-    visited_cost = [[[int(1e9)] * 4 for _ in range(n)] for _ in range(n)]
+    # visited_cost[r][c][dir]에 (r, c)에 dir 방향으로 도착하는 최소 비용을 저장
+    visited_cost = [[[float('inf')] * 4 for _ in range(n)] for _ in range(n)]
 
-    q = deque()
-
-    # 방향 벡터: 오른쪽, 아래, 왼쪽, 위
+    # 우선순위 큐: (cost, r, c, direction)
+    pq = []
+    
+    # 방향 벡터: 0: 오른쪽, 1: 아래, 2: 왼쪽, 3: 위
     dr = [0, 1, 0, -1]
     dc = [1, 0, -1, 0]
 
-    # 시작 지점에서 초기 큐에 항목 추가
-    # 시작점 (0,0)은 비용이 0이므로, 첫 이동은 비용 100
+    # 시작점 (0, 0)에서 첫 이동에 대한 상태를 우선순위 큐에 추가
+    # 오른쪽으로 이동
     if board[0][1] == 0:
-        q.append((0, 1, 100, 0)) # r, c, cost, direction
+        heapq.heappush(pq, (100, 0, 1, 0))
         visited_cost[0][1][0] = 100
     
+    # 아래로 이동
     if board[1][0] == 0:
-        q.append((1, 0, 100, 1))
+        heapq.heappush(pq, (100, 1, 0, 1))
         visited_cost[1][0][1] = 100
 
-    while q:
-        r, c, cost, past_dir = q.popleft()
+    while pq:
+        cost, r, c, past_dir = heapq.heappop(pq)
+        
+        # 현재 꺼낸 비용이 이미 저장된 최소 비용보다 크면 무시
+        if cost > visited_cost[r][c][past_dir]:
+            continue
 
-        # 도착 지점이라면 최소 비용 갱신 (반환은 모든 탐색 후)
+        # 도착 지점이라면 최종 비용 업데이트
         if r == n - 1 and c == n - 1:
             continue
 
-        # 4가지 방향으로 이동
+        # 네 방향으로 이동
         for i in range(4):
             nr = r + dr[i]
             nc = c + dc[i]
 
-            # 비용 계산
-            # 이전 방향과 같으면 100원, 다르면 600원
+            # 비용 계산: 직선은 100원, 코너는 600원
             plus_cost = 100 if past_dir == i else 600
             new_cost = cost + plus_cost
-
+            
             # 유효성 검사 (범위, 벽)
             if 0 <= nr < n and 0 <= nc < n and board[nr][nc] == 0:
-                # 현재까지의 비용이 이전에 방문했던 비용보다 적은 경우에만 큐에 추가
+                # 더 저렴한 경로를 찾았다면 갱신하고 우선순위 큐에 추가
                 if new_cost < visited_cost[nr][nc][i]:
                     visited_cost[nr][nc][i] = new_cost
-                    q.append((nr, nc, new_cost, i))
-
-    # 모든 탐색이 끝난 후 도착점의 최소 비용 반환
+                    heapq.heappush(pq, (new_cost, nr, nc, i))
+    
+    # 도착점의 네 방향 비용 중 최소값을 반환
     return min(visited_cost[n-1][n-1])
-
-
-"""
-직선 도로 100원
-코너 500원
-
-최소 비용
-
-BFS로 가능한 모든 경로 구하고 비용 최소인 경로 반환
-
-visited 계산?
-왔던 방향을 visited 값으로 저장?
-
-
-
-
-"""
