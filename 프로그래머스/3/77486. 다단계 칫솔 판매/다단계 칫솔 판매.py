@@ -20,7 +20,7 @@ def solution(enroll, referral, seller, amount):
         r, sales = enroll_map[s]
         
         now = s
-        while a:
+        while a and now != "-":
             parent = enroll_map[now][0]
             ten_percent = a // 10
             
@@ -30,13 +30,10 @@ def solution(enroll, referral, seller, amount):
             
             enroll_map[now][1] += mine
             
-            if parent == "-":
-                break
-            
             now = parent
     
-    for en in enroll_map:
-        answer.append(enroll_map[en][1])
+    for name in enroll:
+        answer.append(enroll_map[name][1])
     
     return answer
 
