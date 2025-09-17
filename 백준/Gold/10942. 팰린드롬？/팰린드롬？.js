@@ -10,31 +10,22 @@ const q = input.slice(3).map((v) => v.split(' ').map(Number));
 
 const dp = Array.from({ length: N + 1 }, () => Array(N + 1).fill(0));
 
-let minus;
-// 대각1
-for (let i = 1; i <= N; i++) {
-  dp[i][i] = 1;
-  minus = 1;
-  for (let j = i + 1; j <= N; j++) {
-    if (i - minus <= 0) break;
+// 길이 1
+for (let i = 1; i <= N; i++) dp[i][i] = 1;
 
-    if (dp[i + 1 - minus][j - 1] === 0) break;
-    if (nums[i - minus] === nums[j]) dp[i - minus][j] = 1;
-    minus++;
-  }
-}
-
-// 대각2
+// 길이 2
 for (let i = 1; i < N; i++) {
   if (nums[i] === nums[i + 1]) dp[i][i + 1] = 1;
-  minus = 1;
+}
 
-  for (let j = i + 2; j <= N; j++) {
-    if (i - minus <= 0) break;
-
-    if (dp[i + 1 - minus][j - 1] === 0) break;
-    if (nums[i - minus] === nums[j]) dp[i - minus][j] = 1;
-    minus++;
+// 길이 3 이상
+for (let len = 3; len <= N; len++) {
+  for (let start = 1; start <= N - len + 1; start++) {
+    const end = start + len - 1;
+    // 양 끝이 같고, 그 안쪽이 팰린드롬이라면 현재 구간도 팰린드롬
+    if (nums[start] === nums[end] && dp[start + 1][end - 1] === 1) {
+      dp[start][end] = 1;
+    }
   }
 }
 
