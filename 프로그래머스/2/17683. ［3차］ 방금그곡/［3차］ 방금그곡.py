@@ -1,64 +1,45 @@
-def str_to_min(str_time):
-    h, m = map(int, str_time.split(':'))
-    
-    return h * 60 + m
-
-def str_to_melody(melody):
-    melody_arr = []
-    for i in range(len(melody)):
-        if melody[i] != "#":
-            melody_arr.append(melody[i])
-            continue
-        melody_arr[-1] = melody_arr[-1] + "#"
-    return melody_arr
-
 def solution(m, musicinfos):
-    answer = "(None)"
-    musics = []
-    i=0
-    for music in musicinfos:
-        start, end, title, melody = music.split(",")
-        end = str_to_min(end)
-        start = str_to_min(start)
+    # '#'이 붙은 음을 처리하기 쉬운 다른 문자로 일괄 치환
+    def replace_sharps(melody):
+        return melody.replace('C#', 'c').replace('D#', 'd').replace('F#', 'f').replace('G#', 'g').replace('A#', 'a').replace('B#', 'b')
+
+    m = replace_sharps(m)
+    
+    # 조건에 맞는 음악 후보들을 저장할 리스트
+    matching_songs = []
+
+    for idx, info in enumerate(musicinfos):
+        start_time, end_time, title, melody_sheet = info.split(',')
         
-        duration = end - start
+        # 시간 -> 분으로 변환 및 재생 시간 계산
+        start_h, start_m = map(int, start_time.split(':'))
+        end_h, end_m = map(int, end_time.split(':'))
+        duration = (end_h * 60 + end_m) - (start_h * 60 + start_m)
         
-        melody_arr = str_to_melody(melody)
+        melody_sheet = replace_sharps(melody_sheet)
         
-        if duration // len(melody_arr) > 0:
-            melody = (' '.join(melody_arr) + ' ') * (duration // len(melody_arr)) + ' '.join(melody_arr[:duration % len(melody_arr)]) + " "
+        # 악보가 비어있는 경우, 재생 시간이 0보다 커도 full_melody가 비게 됨
+        # divmod(x, 0) 오류 방지
+        if not melody_sheet:
+            continue
+
+        # 재생 시간만큼의 전체 멜로디 생성
+        q, r = divmod(duration, len(melody_sheet))
+        full_melody = melody_sheet * q + melody_sheet[:r]
+        
+        # 멜로디가 포함되어 있다면 후보 리스트에 추가
+        if m in full_melody:
+            # (재생 시간, 입력 순서, 제목) 튜플 형태로 저장
+            matching_songs.append((duration, idx, title))
             
-        else:
-            melody = ' '.join(melody_arr[:duration]) + " "
-        # print(melody)
-        
-        musics.append((title, melody, duration, i))
-        i+=1
-        
-        # print(melody)
-        # print(start, end, title, melody, duration)
+    # 후보가 한 명도 없으면 "(None)" 반환
+    if not matching_songs:
+        return "(None)"
     
+    # 후보 리스트를 우선순위 규칙에 따라 정렬
+    # 1. 재생 시간(duration)은 내림차순 (-x[0])
+    # 2. 입력 순서(idx)는 오름차순 (x[1])
+    matching_songs.sort(key=lambda x: (-x[0], x[1]))
     
-    musics.sort(key=lambda x: (-x[2], x[3]))
-    
-    # print(musics)
-    m = str_to_melody(m)
-    m = ' '.join(m)
-    # print(m)
-    
-    for title, melody, _, __ in musics:
-        if m + ' ' in melody:
-            return title
-    
-    return answer
-
-"""
-재생 시간만큼의 반복됐을 때의 멜로디 구하기
-1 <= n <= 100
-
-
-
-조건이 일치하는 음악이 여러 개일 때에는 라디오에서 재생된 시간이 제일 긴 음악 제목을 반환한다. 재생된 시간도 같을 경우 먼저 입력된 음악 제목을 반환한다.
-
-
-"""
+    # 정렬된 리스트의 가장 첫 번째 원소가 최종 정답
+    return matching_songs[0][2]
