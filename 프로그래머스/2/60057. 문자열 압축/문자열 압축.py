@@ -12,26 +12,21 @@ def solution(s):
             s_arr.append(s[k:min(n, k+length)])
             k += length
         
-        # print(s_arr)
         zipped = ""
         m = len(s_arr)
         i = 0
-        for _ in range(m):
+        while True:
             if i >= m: break
             cnt = 0
             for j in range(1, m):
                 if i+j >= m: break
                 if s_arr[i+j] != s_arr[i]: break
                 cnt += 1
-            # print(i, cnt)
-            # if i >= m: break
-            # print(i)
             if cnt >= 1:
                 zipped = zipped + str(cnt+1) + s_arr[i]
             else:
                 zipped = zipped + s_arr[i]
             i += cnt+1
-        # print(length, zipped)
         return zipped
         
     # 압축 길이 1~n
