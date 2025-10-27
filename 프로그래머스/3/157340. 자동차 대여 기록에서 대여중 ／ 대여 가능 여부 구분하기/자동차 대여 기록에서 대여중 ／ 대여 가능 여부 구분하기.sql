@@ -1,16 +1,11 @@
-SELECT
-    CAR_ID,
-    -- MAX(CASE...)를 사용하여 그룹 내에 '대여중'이 하나라도 있으면 '대여중'을 선택
-    MAX(CASE
-        -- 시작일이 2022-10-16보다 작거나 같고 (대여가 이미 시작되었거나 16일에 시작)
-        -- 반납일이 2022-10-16보다 크거나 같으면 (16일에 반납되더라도 16일은 대여 기간에 포함)
-        WHEN DATE(START_DATE) <= '2022-10-16' AND DATE(END_DATE) >= '2022-10-16' 
-            THEN '대여중'
-        ELSE '대여 가능'
-    END) AS AVAILABILITY
-FROM
-    CAR_RENTAL_COMPANY_RENTAL_HISTORY
-GROUP BY
-    CAR_ID
-ORDER BY
-    CAR_ID DESC;
+select distinct CAR_ID, 
+    case 
+        when CAR_ID in (
+            select CAR_ID
+            from CAR_RENTAL_COMPANY_RENTAL_HISTORY
+            where '2022-10-16' between START_DATE and END_DATE
+        ) then '대여중'
+        else '대여 가능'
+        end as AVAILABILITY
+from CAR_RENTAL_COMPANY_RENTAL_HISTORY
+order by CAR_ID desc;
