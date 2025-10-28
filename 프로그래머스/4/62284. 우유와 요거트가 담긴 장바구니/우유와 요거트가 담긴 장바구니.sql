@@ -1,0 +1,21 @@
+# SELECT * FROM CART_PRODUCTS
+SELECT DISTINCT CART_ID
+# SELECT *
+FROM (
+    SELECT CART_ID,
+    SUM(
+        CASE
+            WHEN NAME = 'Milk' THEN 1
+            ELSE 0
+        END
+    ) OVER (PARTITION BY CART_ID) AS M_CNT,
+    SUM(
+        CASE
+            WHEN NAME = 'Yogurt' THEN 1
+            ELSE 0
+        END
+    ) OVER (PARTITION BY CART_ID) AS Y_CNT
+    FROM CART_PRODUCTS
+) AS SQ
+WHERE SQ.M_CNT >= 1 AND SQ.Y_CNT >= 1
+# ORDER BY CART_ID
