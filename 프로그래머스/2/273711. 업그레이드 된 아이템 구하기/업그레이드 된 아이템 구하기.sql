@@ -1,0 +1,27 @@
+With PT AS (
+    SELECT DISTINCT I.ITEM_ID AS PARENT_ID
+    FROM ITEM_INFO I
+    LEFT JOIN ITEM_TREE T on I.ITEM_ID = T.PARENT_ITEM_ID
+    WHERE T.PARENT_ITEM_ID IS NOT NULL AND I.RARITY = 'RARE'
+)
+SELECT I.ITEM_ID, I.ITEM_NAME, I.RARITY
+FROM ITEM_INFO I
+JOIN ITEM_TREE T on I.ITEM_ID = T.ITEM_ID
+JOIN PT on PT.PARENT_ID = T.PARENT_ITEM_ID
+ORDER BY I.ITEM_ID DESC
+
+
+/*
+
+나를 parent로 갖는 아이템 찾기
+= parent가 null이 아닌 것중에 parent가 rare인 경우
+
+PARENT_RARITY 테이블
+
+0(r)
+|    \
+1(r)  2
+|   \
+3(r) 4(r)
+
+*/
