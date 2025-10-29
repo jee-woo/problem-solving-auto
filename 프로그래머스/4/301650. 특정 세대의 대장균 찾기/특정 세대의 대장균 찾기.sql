@@ -1,0 +1,42 @@
+-- 코드를 작성해주세요
+With ROOT AS (
+    SELECT ID
+    FROM ECOLI_DATA
+    WHERE PARENT_ID IS NULL
+),
+SECOND AS (
+    SELECT ID
+    FROM ECOLI_DATA
+    WHERE PARENT_ID in (SELECT ID FROM ROOT)
+),
+THIRD AS (
+    SELECT ID
+    FROM ECOLI_DATA
+    WHERE PARENT_ID in (SELECT ID FROM SECOND)
+)
+
+SELECT ID
+FROM THIRD
+ORDER BY ID
+
+/*
+부모의 부모가 있는지 확인
+부모의부모의부모는 NULL
+
+NULL에서 시작해서 자식의 자식 찾기
+
+
+1
+|
+3
+|
+7
+
+2
+|\
+4 5
+|
+6
+|
+8
+*/
