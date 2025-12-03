@@ -1,155 +1,109 @@
 import sys
 from collections import deque
 
+# 입력 설정
 input = sys.stdin.readline
+R, C = 12, 6
+field = [list(input().strip()) for _ in range(R)]
 
-# 12개 줄
+dr = [0, 1, 0, -1]
+dc = [1, 0, -1, 0]
 
-field = []
+def bfs_find_group(sr, sc, color, current_field):
+    """특정 위치에서 4개 이상 연결된 그룹의 좌표를 찾습니다."""
+    q = deque([(sr, sc)])
+    
+    # 큐에 넣기 전, 이미 방문했다고 표시해야 중복 탐색을 막을 수 있습니다.
+    # visited 대신, 이미 큐에 들어간 좌표를 저장하는 리스트를 사용
+    group = [(sr, sc)]
+    current_field[sr][sc] = '.' # 임시 방문 표시 (같은 색 다른 그룹이 겹치지 않도록)
+    
+    while q:
+        r, c = q.popleft()
+        
+        for i in range(4):
+            nr, nc = r + dr[i], c + dc[i]
+            
+            if 0 <= nr < R and 0 <= nc < C and current_field[nr][nc] == color:
+                current_field[nr][nc] = '.' # 임시 방문 표시
+                group.append((nr, nc))
+                q.append((nr, nc))
+                
+    # 4개 미만이면 그룹을 찾지 않은 것으로 간주하고 원래 필드 상태로 복구 (임시 필드 사용 시)
+    # 현재 코드에서는 리스트에 저장된 좌표만 반환하고, pop_list에서 처리합니다.
+    return group
 
-for _ in range(12):
-  line = input().strip()
-  field.append(list(line))
-
-dr = [0, 1, -1, 0]
-dc = [1, 0, 0, -1]
-
-
-# def dfs(r, c, a, depth, visited):
-#   print('dfs', r, c)
-#   visited[r][c] = True
-#   field[r][c] = '.'
-#   if depth == 10:
-#     return depth
-#   for i in range(4):
-#     nr = r + dr[i]
-#     nc = c + dc[i]
-#     if nr < 0 or nc < 0 or nr >= 12 or nc >= 6:
-#       continue
-#     if field[nr][nc] == '.':
-#       continue
-#     if visited[nr][nc]:
-#       continue
-#     if field[nr][nc] == a:
-#       field[nr][nc] = '.'
-#       depth = dfs(nr, nc, a, depth+1, visited)
-#       # return dfs(nr, nc, a, depth+1, visited)
-#       # print(ret, r, c)
-#       # if depth < 4:
-#       #   field[nr][nc] = a
-#       break
-
-#   if depth < 4:
-#     field[r][c] = a
-#   return depth
-
-
-def bfs(sr, sc, visited, a):
-  q = deque([(sr, sc)])
-  cnt = 0
-  dr = [0, 1, -1, 0]
-  dc = [1, 0, 0, -1]
-  visited[sr][sc] = True
-  while q:
-    r, c = q.popleft()
-    field[r][c] = '-'
-    cnt += 1
-
-    for i in range(4):
-      nr = r + dr[i]
-      nc = c + dc[i]
-      if nr < 0 or nc < 0 or nr >= 12 or nc >= 6:
-        continue
-      if visited[nr][nc]:
-        continue
-      if field[nr][nc] != a:
-        continue
-      visited[nr][nc] = True
-      q.append((nr, nc))
-
-  return cnt
+def apply_gravity(field):
+    """각 열(Column)을 기준으로 중력을 효율적으로 적용합니다."""
+    for j in range(C):
+        temp_col = []
+        # 1. 아래에서부터 뿌요만 골라냅니다.
+        for i in range(R - 1, -1, -1):
+            if field[i][j] != '.':
+                temp_col.append(field[i][j])
+        
+        # 2. 필드를 초기화하고 뿌요를 아래쪽에 채워 넣습니다.
+        for i in range(R):
+            field[i][j] = '.'
+            
+        for k in range(len(temp_col)):
+            # 맨 아래(11행)부터 위로 채워 넣습니다.
+            field[R - 1 - k][j] = temp_col[k]
 
 
-def reset_bfs(sr, sc, a):
-  q = deque([(sr, sc)])
-  visited = [[False] * 6 for _ in range(12)]
-  dr = [0, 1, -1, 0]
-  dc = [1, 0, 0, -1]
-  field[sr][sc] = a
-  while q:
-    r, c = q.popleft()
-    field[r][c] = a
+def solve():
+    global field
+    combo_count = 0
+    
+    while True:
+        popped_coords = []
+        # 현재 턴에서 터진 뿌요가 있는지 확인하는 플래그
+        is_popped_in_this_turn = False
+        visited = [[False] * C for _ in range(R)]
+        
+        # 1. 그룹 찾기 및 좌표 수집
+        for r in range(R):
+            for c in range(C):
+                if field[r][c] != '.' and not visited[r][c]:
+                    color = field[r][c]
+                    
+                    # BFS/DFS를 위해 임시 큐/리스트 사용
+                    temp_group = []
+                    q = deque([(r, c)])
+                    temp_group.append((r, c))
+                    visited[r][c] = True
+                    
+                    # 실제 그룹 찾기 BFS
+                    while q:
+                        cr, cc = q.popleft()
+                        
+                        for i in range(4):
+                            nr, nc = cr + dr[i], cc + dc[i]
+                            
+                            if 0 <= nr < R and 0 <= nc < C and not visited[nr][nc] and field[nr][nc] == color:
+                                visited[nr][nc] = True
+                                temp_group.append((nr, nc))
+                                q.append((nr, nc))
 
-    for i in range(4):
-      nr = r + dr[i]
-      nc = c + dc[i]
-      if nr < 0 or nc < 0 or nr >= 12 or nc >= 6:
-        continue
-      if visited[nr][nc]:
-        continue
-      if field[nr][nc] != '-':
-        continue
-      visited[nr][nc] = True
-      q.append((nr, nc))
+                    # 2. 터뜨릴지 결정
+                    if len(temp_group) >= 4:
+                        popped_coords.extend(temp_group)
+                        is_popped_in_this_turn = True
+        
+        # 3. 터뜨린 뿌요가 없으면 연쇄 종료
+        if not is_popped_in_this_turn:
+            break
+            
+        # 4. 연쇄 횟수 증가
+        combo_count += 1
+        
+        # 5. 필드에 반영 (터뜨리기)
+        for r, c in popped_coords:
+            field[r][c] = '.'
+            
+        # 6. 중력 적용
+        apply_gravity(field)
+        
+    return combo_count
 
-
-answer = 0
-while True:
-  is_end = True
-  visited = [[False] * 6 for _ in range(12)]
-
-  # 모두 순회하면서 없애기
-  for r in range(12):
-    for c in range(6):
-      if field[r][c] == '.':
-        continue
-      if visited[r][c]:
-        continue
-      a = field[r][c]
-      cnt = bfs(r, c, visited, a)
-      # cnt = dfs(r, c, field[r][c], 1, visited)
-      # print(r, c, cnt)
-      if cnt < 4:
-        reset_bfs(r, c, a)
-      else:
-        reset_bfs(r, c, '.')
-      # for i in range(12):
-      #   print(field[i])
-      # for i in range(12):
-      #   print(visited[i])
-      if cnt >= 4 and is_end:
-        answer += 1
-        is_end = False
-  # for i in range(12):
-  #   print(visited[i])
-  if is_end:
-    # print('end')
-    break
-
-  # print('===========down===========')
-  # 중력내리기
-  for i in range(12-2, -1, -1):
-    for j in range(6):
-      if field[i][j] == '.':
-        continue
-
-      if field[i+1][j] == '.':
-        r = i
-        while r <= 10 and field[r+1][j] == '.':
-          field[r+1][j] = field[r][j]
-          field[r][j] = '.'
-          r += 1
-
-    # for i in range(12):
-    #   print(field[i])
-    # print()
-
-  # for i in range(12):
-  #   print(field[i])
-
-print(answer)
-
-"""
-같은 색 뿌요가 4개 이상 상하좌우로 연결되어 있으면 연결된 같은 색 뿌요들이 한꺼번에 없어진다.
-
-"""
+print(solve())
